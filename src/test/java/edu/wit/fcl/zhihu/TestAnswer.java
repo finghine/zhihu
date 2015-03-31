@@ -23,6 +23,11 @@ public class TestAnswer {
 		Assert.assertEquals("25814355",an.getQuestionId());
 		Assert.assertEquals(19350,an.getVoteCount());
 		System.out.println(an.getContentHtml());
+		System.out.println("--");
+		System.out.println(an.getSummaryText());
+		System.out.println("--");
+		System.out.println(an.getQuestionText());
+		an.toText(new File("testdata/ans.txt"));
 	}
 
 }
