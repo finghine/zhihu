@@ -27,7 +27,16 @@ public class TestAnswer {
 		System.out.println(an.getSummaryText());
 		System.out.println("--");
 		System.out.println(an.getQuestionText());
-		an.toText(new File("testdata/ans.txt"));
+		String questionText = an.getQuestionText();
+		questionText = questionText.replaceAll(Answer.fileNameCheckRegax,"");
+		an.toText(new File("testdata/"+questionText+".txt"));
+	}
+	@Test
+	public void testFileNameRegex()
+	{
+		String taget = "a|b*c?d:*e!f/g\\h>i<j";
+		String res = taget.replaceAll(Answer.fileNameCheckRegax, "");
+		Assert.assertEquals("abcde!fghij",res);
 	}
 
 }

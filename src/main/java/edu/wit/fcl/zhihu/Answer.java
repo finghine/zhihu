@@ -27,13 +27,11 @@ public class Answer {
 				String tagname = e.tagName();
 				if(tagname.equalsIgnoreCase("br"))
 				{
-					String text = e.html();
-					//TODO fix double \r\n?  
-					sb.append(text+"\r\n");
+					sb.append("\r\n");
 				}
 				else if(tagname.equalsIgnoreCase("strong"))
 				{
-					sb.append(e.text());
+//					sb.append(e.text());
 				}
 				else if(tagname.equalsIgnoreCase("img"))
 				{
@@ -42,6 +40,7 @@ public class Answer {
 				else if(tagname.equalsIgnoreCase("span"))
 				{
 					//TODO
+					break;
 				}
 				else
 				{
@@ -59,10 +58,12 @@ public class Answer {
 				//TODO
 			}
 		}
+		
 		FileOutputStream fos = new FileOutputStream(outFile);
-		fos.write(sb.toString().getBytes("utf8"));
+		fos.write(sb.toString().replaceAll("\r\n\r\n","\r\n").getBytes("utf8"));
 		fos.close();
 	}
+	public static final String fileNameCheckRegax  ="[/\\\\:\\*\\?\\\"\\<\\>\\|]";
 	public Answer(Element answerNode) {
 		initAnserIdQuestionId(answerNode);
 		initContentHtml(answerNode);
