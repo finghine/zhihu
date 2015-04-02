@@ -35,16 +35,23 @@ public class Answer {
 				}
 				else if(tagname.equalsIgnoreCase("img"))
 				{
+//					String imgUrl = e.attr("src");
+//					System.out.println(imgUrl);
+					sb.append("[ͼ]");
 					//TODO
 				}
 				else if(tagname.equalsIgnoreCase("span"))
 				{
+//					String span = e.html();
+//					System.out.println(span);
+					pressSpan(e);
 					//TODO
 					break;
 				}
 				else
 				{
 					//TODO
+//					System.err.println(tagname);
 				}
 				
 			}
@@ -58,23 +65,52 @@ public class Answer {
 				//TODO
 			}
 		}
-		
-		FileOutputStream fos = new FileOutputStream(outFile);
-		fos.write(sb.toString().replaceAll("\r\n\r\n","\r\n").getBytes("utf8"));
-		fos.close();
+		if(outFile!=null)
+		{
+			FileOutputStream fos = new FileOutputStream(outFile);
+			fos.write(sb.toString().replaceAll("\r\n\r\n","\r\n").getBytes("utf8"));
+			fos.close();
+		}
+	}
+	private void pressSpan(Element e)
+	{
+		Elements es = e.select("a");
+		Element alink= es.get(0);
+			String regex = "[^\\d^-]";
+			String pushistr = alink.attr("data-tip");
+			pubishTime = pushistr.replaceAll(regex, "");
+			String htmlin = alink.html();
+			lastEditTime= htmlin.replaceAll(regex,"");
+			
+			String href= alink.attr("href");
+			String [] ss = href.split("/");
+			questionId = ss[2];
+			answerId = ss[4];
 	}
 	public static final String fileNameCheckRegax  ="[/\\\\:\\*\\?\\\"\\<\\>\\|]";
 	public Answer(Element answerNode) {
-		initAnserIdQuestionId(answerNode);
 		initContentHtml(answerNode);
 		initVoteCount(answerNode);
 		initSummaryText(answerNode);
+		//TODO need modify the function name
+		try {
+			toText(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		initQuestionText(answerNode);
 	}
 	private void initQuestionText(Element answerNode) {
 		String queryStr = "h2.zm-item-title a";
 		Elements nodes = answerNode.select(queryStr);
-		questionText= nodes.get(0).text();
+		if(nodes.size()!=0)
+		{
+			questionText= nodes.get(0).text();
+		}
+		else
+		{
+			questionText="unknow_"+questionId;
+		}
 	}
 	private void initSummaryText(Element answerNode) {
 		String queryStr = "div.zm-item-rich-text div.zh-summary";
@@ -94,14 +130,6 @@ public class Answer {
 		contentHtml = nodes.get(0).ownText();
 	}
 
-	private void initAnserIdQuestionId(Element answerNode) {
-		Elements node = answerNode.select("a.toggle-expand");
-		String hrefstr = node.get(0).attr("href");
-		String[] ss = hrefstr.split("/");
-		questionId = ss[2];
-		answerId = ss[4];
-	}
-
 	private String answerId;
 	private String questionId;
 	private String contentHtml;
@@ -110,8 +138,15 @@ public class Answer {
 	// TODO
 	private String summaryText;
 	private String questionText;
-	// private String lastEditTime;
-	// private String pubishTime;
+	private String lastEditTime;
+
+	public String getLastEditTime() {
+		return lastEditTime;
+	}
+	public String getPubishTime() {
+		return pubishTime;
+	}
+	private String pubishTime;
 
 	public String getQuestionText() {
 		return questionText;
