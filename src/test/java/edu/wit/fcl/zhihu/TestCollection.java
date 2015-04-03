@@ -15,6 +15,11 @@ public class TestCollection {
 	public void ansert() throws UnsupportedEncodingException, IOException {
 		String filename = "collection_31446835_out_js.html";
 		Collection collection = new Collection(new File(filename));
+		String name = collection.getName();
+		Assert.assertEquals("应用程序与网络安全的方方面面",name);
+		Assert.assertEquals("31446835",collection.getId());
+		Assert.assertEquals("huang_haopeng",collection.getCreator().getId());
+		Assert.assertEquals("黄捞捞",collection.getCreator().getName());
 		List<Answer> list = collection.getAnswerlist();
 		Assert.assertEquals(22,list.size());
 		Answer firstAnswer = list.get(0);
